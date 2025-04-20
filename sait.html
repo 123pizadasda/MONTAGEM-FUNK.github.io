@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="icon" href="ava.png" type="image/svg+xml">
+    <link rel="stylesheet" href="animatsii.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONTAGEM FUNK</title>
+    <style>
+        /* Основные стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-color: #000000;
+        }
+
+        /* Обновленные стили для анимации текста */
+        .track-title-container {
+            position: relative;
+            height: 80px;
+            left: -740px;
+            margin-bottom: 30px;
+            width: 1200%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .track-title {
+            font-size: 2.5rem;
+            display: inline-block;
+            white-space: nowrap;
+            color: #cdb4db;
+            text-shadow: 0 0 10px #8a2be2, 0 0 20px #ff0000;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .track-title span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Шапка */
+        .glowing-header {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #8a2be2;
+        }
+
+        .neon-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #8a2be2, #ff00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .blink {
+            animation: blink 1s step-end infinite;
+            color: #ff00ff;
+        }
+
+        .floating-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff00ff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ff00ff;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Главный экран */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pulse-button {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #000000, #1a001a);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            border: 1px solid #ff00ff;
+        }
+
+        .pulse-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.7);
+        }
+
+        .scroll-down-indicator {
+            position: relative;
+            width: 30px;
+            height: 50px;
+            margin-top: 30px;
+        }
+
+        .scroll-down-indicator::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: #ff00ff;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: scroll-down 2s infinite;
+        }
+
+        /* Сетка фонков */
+        .fonk-grid {
+            padding: 100px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .fonk-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .fonk-card.active {
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
+        }
+
+        .fonk-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.5);
+        }
+
+        .cover-art {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cover-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .fonk-card:hover .cover-art img {
+            transform: scale(1.1);
+        }
+
+        .title-glitch {
+            padding: 15px;
+            font-size: 1.2rem;
+            position: relative;
+            color: #ffffff;
+        }
+
+        .title-glitch:hover {
+            animation: glitch 0.5s linear infinite;
+            color: #ff00ff;
+        }
+
+        .author {
+            padding: 0 15px 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .waveform-visualizer {
+            height: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 0 10px;
+        }
+
+        .waveform-visualizer .bar {
+            background: linear-gradient(to top, #ff00ff, #8a2be2);
+            width: 3px;
+            height: 10px;
+            border-radius: 3px;
+            animation: equalize 1.5s infinite ease-in-out;
+            animation-delay: calc(var(--i) * 0.1s);
+        }
+
+        /* Аудиоплеер */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.5);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+            z-index: 100;
+        }
+
+        .player-artwork {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .player-artwork img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+        .control-button:hover {
+            background: rgba(138, 43, 226, 0.3);
+            color: #ff00ff;
+        }
+
+        .control-button.big {
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            background: rgba(138, 43, 226, 0.4);
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, #ff00ff, #8a2be2);
+            border-radius: 2px;
+        }
+
+        /* Стили для ползунка громкости */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ff00ff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            background: #8a2be2;
+            transform: scale(1.2);
+        }
+
+        .volume-icon {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Анимации */
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 5px #fff; }
+            50% { text-shadow: 0 0 20px #ff00ff, 0 0 30px #8a2be2; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(138, 43, 226, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+        }
+
+        @keyframes scroll-down {
+            0% { transform: translate(-50%, 0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(-50%, 15px); opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes equalize {
+            0%, 100% { height: 10px; }
+            50% { height: 30px; }
+        }
+
+        @keyframes rotate-album {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .glowing-header {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .floating-nav {
+                margin-top: 15px;
+                gap: 15px;
+            }
+
+            .track-title {
+                font-size: 1.8rem;
+            }
+
+            .audio-player {
+                flex-wrap: wrap;
+                padding: 10px;
+                bottom: 10px;
+            }
+
+            .volume-control {
+                display: none;
+            }
+        }
+
+        /* Стили для скрытого аудио */
+        .audio-element {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="video-background">
+  <video autoplay muted loop id="myVideo">
+    <source src="your-video.mp4" type="video/mp4">
+    <source src="fon11.mp4" type="video/mp4">
+  </video>
+</div>
+    <header class="glowing-header">
+        <h1 class="neon-title">MONTAGEM FUNK<span class="blink">)</span></h1>
+        <nav class="floating-nav">
+            <a href="#" class="nav-link hover-glow">FUNK</a>
+            <a href="#" class="nav-link hover-glow">DISCORD</a>
+            <a href="#" class="nav-link hover-glow">TELEGRAM</a>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="track-title-container">
+                <h2 class="track-title" id="title1">MONTAGEM CONTIGO</h2>
+                <h2 class="track-title" id="title2" style="display: none;">MONTAGEM DEPRIMIDO</h2>
+                <h2 class="track-title" id="title3" style="display: none;">KRUSH INFERNAL</h2>
+                <h2 class="track-title" id="title4" style="display: none;">SE TU QUER (SLOWED)</h2>
+                <h2 class="track-title" id="title5" style="display: none;">MONTAGEM BAILÃO</h2>
+            </div>
+            <button class="pulse-button" id="brazil-button">FUNK</button>
+        </div>
+        <div class="scroll-down-indicator bounce"></div>
+    </section>
+
+    <section class="fonk-grid">
+        <!-- Карточки будут создаваться динамически -->
+    </section>
+
+    <div class="audio-player floating-player">
+        <div class="player-artwork rotate-album">
+            <img src="https://via.placeholder.com/100x100/000000/ff0000?text=Now+Playing" alt="Текущий трек">
+        </div>
+        <div class="player-controls">
+            <button class="control-button hover-glow" id="prev-button">⏮</button>
+            <button class="control-button hover-glow big" id="main-play-button">▶</button>
+            <button class="control-button hover-glow" id="next-button">⏭</button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill animated-progress"></div>
+        </div>
+        <div class="volume-control">
+            <span class="volume-icon">🔊</span>
+            <input type="range" min="0" max="1" step="0.01" value="0.7" class="volume-slider" id="volume-slider">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Функция для перемешивания массива (алгоритм Фишера-Йетса)
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // Функция для отображения перемешанных карточек
+            function renderShuffledCards() {
+                const grid = document.querySelector('.fonk-grid');
+                grid.innerHTML = '';
+
+                tracks.forEach(track => {
+                    const card = document.createElement('div');
+                    card.className = 'fonk-card';
+                    card.setAttribute('data-audio-id', track.id);
+
+                    card.innerHTML = `
+                        <div class="cover-art hover-expand">
+                            <img src="${track.cover}" alt="${track.title}">
+                        </div>
+                        <h3 class="title-glitch">${track.title}</h3>
+                        <p class="author">Автор: ${track.author}</p>
+                        <audio id="${track.id}" class="audio-element"></audio>
+                    `;
+
+                    grid.appendChild(card);
+
+                    const audioElement = document.getElementById(track.id);
+                    audioElement.src = track.audioSrc;
+                    audioElements[track.id] = audioElement;
+
+                    // Добавляем обработчик клика
+                    card.addEventListener('click', function() {
+                        toggleAudio(track.id, this);
+                    });
+
+                    // Добавляем анимацию появления
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
+                    // Анимация появления при прокрутке
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }
+                        });
+                    }, { threshold: 0.1 });
+
+                    observer.observe(card);
+                });
+            }
+
+            // Анимация текста
+            const titles = [
+                { id: 'title1', text: 'MONTAGEM CONTIGO' },
+                { id: 'title2', text: 'MONTAGEM DEPRIMIDO' },
+                { id: 'title3', text: 'KRUSH INFERNAL' },
+                { id: 'title4', text: 'SE TU QUER (SLOWED)' },
+                { id: 'title5', text: 'MONTAGEM BAILÃO' }
+            ];
+
+            let currentTitleIndex = 0;
+
+            function animateTitle() {
+                if (currentTitleIndex >= titles.length) {
+                    currentTitleIndex = 0;
+                }
+
+                const currentTitle = titles[currentTitleIndex];
+                const titleElement = document.getElementById(currentTitle.id);
+
+                titleElement.style.display = 'block';
+                titleElement.style.opacity = '1';
+                titleElement.innerHTML = '';
+
+                for (let i = 0; i < currentTitle.text.length; i++) {
+                    const span = document.createElement('span');
+                    span.textContent = currentTitle.text[i];
+                    span.style.transition = 'opacity 0.1s ease, transform 0.3s ease';
+                    span.style.transitionDelay = `${i * 0.1}s`;
+                    titleElement.appendChild(span);
+
+                    setTimeout(() => {
+                        span.style.opacity = '1';
+                        span.style.transform = 'translateY(0)';
+                    }, i * 100);
+                }
+
+                setTimeout(() => {
+                    titleElement.style.opacity = '0';
+                    titleElement.style.display = 'none';
+
+                    currentTitleIndex++;
+
+                    setTimeout(() => {
+                        animateTitle();
+                    }, 800);
+                }, currentTitle.text.length * 100 + 2000);
+            }
+
+            animateTitle();
+
+            // Глобальные переменные для управления аудио
+            let currentAudio = null;
+            let isPlaying = false;
+            let currentTrackIndex = 0;
+            let isAutoPlayEnabled = true; // Автопереключение включено по умолчанию
+            const audioElements = {};
+            const mainPlayButton = document.getElementById('main-play-button');
+            const brazilButton = document.getElementById('brazil-button');
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
+            const volumeSlider = document.getElementById('volume-slider');
+
+            // Массив с данными о треках
+            const tracks = [
+                {
+                    id: 'audio1',
+                    title: 'MONTAGEM CONTIGO',
+                    author: 'repsaj',
+                    cover: 'fonk2/MONTAGEM_CONTIGO.png',
+                    audioSrc: 'fonk1/MONTAGEM_CONTIGO.mp3'
+                },
+                {
+                    id: 'audio2',
+                    title: 'MONTAGEM DEPRIMIDO',
+                    author: 'repsaj',
+                    cover: 'fonk2/MONTAGEM_DEPRIMIDO.png',
+                    audioSrc: 'fonk1/MONTAGEM_DEPRIMIDO.mp3'
+                },
+                {
+                    id: 'audio3',
+                    title: 'RAIZHELL x DYGO x Mxng0 - KRUSH INFERNAL',
+                    author: 'RAIZHELL',
+                    cover: 'fonk2/RAIZHELL x DYGO x Mxng0 - KRUSH INFERNAL.png',
+                    audioSrc: 'fonk1/RAIZHELL x DYGO x Mxng0 - KRUSH INFERNAL.mp3'
+                },
+                {
+                    id: 'audio4',
+                    title: 'SE TU QUER - (SLOWED) MATUTE SUREDA, RODRICCI, LAUNCH13',
+                    author: 'RodriCci',
+                    cover: 'fonk2/SE TU QUER - (SLOWED) MATUTE SUREDA, RODRICCI, LAUNCH13.png',
+                    audioSrc: 'fonk1/SE TU QUER - (SLOWED) MATUTE SUREDA, RODRICCI, LAUNCH13.mp3'
+                },
+                {
+                    id: 'audio5',
+                    title: '𝐑𝐞𝐩𝐬𝐚𝐣 - 𝐌𝐎𝐍𝐓𝐀𝐆𝐄𝐌 𝐁𝐀𝐈𝐋Ã𝐎',
+                    author: 'repsaj',
+                    cover: 'fonk2/𝐑𝐞𝐩𝐬𝐚𝐣 - 𝐌𝐎𝐍𝐓𝐀𝐆𝐄𝐌 𝐁𝐀𝐈𝐋Ã𝐎.png',
+                    audioSrc: 'fonk1/𝐑𝐞𝐩𝐬𝐚𝐣 - 𝐌𝐎𝐍𝐓𝐀𝐆𝐄𝐌 𝐁𝐀𝐈𝐋Ã𝐎.mp3'
+                },
+                {
+                    id: 'audio6',
+                    title: 'Ariis & TOKYOPHILE - Montagem Solar Atmosfera [Phonk]',
+                    author: 'Tribal Trap',
+                    cover: 'fonk2/Ariis & TOKYOPHILE - Montagem Solar Atmosfera [Phonk].png',
+                    audioSrc: 'fonk1/Ariis & TOKYOPHILE - Montagem Solar Atmosfera [Phonk].mp3'
+                },
+                {
+                    id: 'audio7',
+                    title: 'Anatomy_-_Slowed_FREE_VISUALIZER',
+                    author: 'Unknown',
+                    cover: 'fonk2/Anatomy_-_Slowed_FREE_VISUALIZER.png',
+                    audioSrc: 'fonk1/Anatomy_-_Slowed_FREE_VISUALIZER.mp3'
+                },
+                {
+                    id: 'audio8',
+                    title: 'COM_MEDO_Ultra_Slowed',
+                    author: 'Unknown',
+                    cover: 'fonk2/COM_MEDO_Ultra_Slowed.png',
+                    audioSrc: 'fonk1/COM_MEDO_Ultra_Slowed.mp3'
+                },
+                {
+                    id: 'audio9',
+                    title: 'Fragment_Slowed_tiktok_version',
+                    author: 'Unknown',
+                    cover: 'fonk2/Fragment_Slowed_tiktok_version.png',
+                    audioSrc: 'fonk1/Fragment_Slowed_tiktok_version.mp3'
+                },
+                {
+                    id: 'audio10',
+                    title: 'Phonk_Killer_PHOROMANE_-_AUTOMOTIV',
+                    author: 'PHOROMANE',
+                    cover: 'fonk2/Phonk_Killer_PHOROMANE_-_AUTOMOTIV.png',
+                    audioSrc: 'fonk1/Phonk_Killer_PHOROMANE_-_AUTOMOTIV.mp3'
+                },
+                {
+                    id: 'audio11',
+                    title: 'Phonkha_x_TREVLX_-_VELVETAL_SLOWE',
+                    author: 'Phonkha',
+                    cover: 'fonk2/Phonkha_x_TREVLX_-_VELVETAL_SLOWE.png',
+                    audioSrc: 'fonk1/Phonkha_x_TREVLX_-_VELVETAL_SLOWE.mp3'
+                },
+                {
+                    id: 'audio12',
+                    title: 'POWER_SLIDE_Ultra_Slowed',
+                    author: 'Unknown',
+                    cover: 'fonk2/POWER_SLIDE_Ultra_Slowed.png',
+                    audioSrc: 'fonk1/POWER_SLIDE_Ultra_Slowed.mp3'
+                },
+                {
+                    id: 'audio13',
+                    title: 'RAJADA',
+                    author: 'Unknown',
+                    cover: 'fonk2/RAJADA.png',
+                    audioSrc: 'fonk1/RAJADA.mp3'
+                },
+                {
+                    id: 'audio14',
+                    title: 'repsaj_-_MONTAGEM_CONTIGO',
+                    author: 'repsaj',
+                    cover: 'fonk2/repsaj_-_MONTAGEM_CONTIGO.png',
+                    audioSrc: 'fonk1/repsaj_-_MONTAGEM_CONTIGO.mp3'
+                },
+                {
+                    id: 'audio15',
+                    title: '1000 SCHRITTE',
+                    author: 'Unknown',
+                    cover: 'fonk2/1000 SCHRITTE.png',
+                    audioSrc: 'fonk1/1000 SCHRITTE.mp3'
+                },
+                {
+                    id: 'audio16',
+                    title: 'Amor Na Praia',
+                    author: 'Unknown',
+                    cover: 'fonk2/Amor Na Praia.png',
+                    audioSrc: 'fonk1/Amor Na Praia.mp3'
+                },
+                {
+                    id: 'audio17',
+                    title: 'BONITO ROUBO',
+                    author: 'Unknown',
+                    cover: 'fonk2/BONITO ROUBO.png',
+                    audioSrc: 'fonk1/BONITO ROUBO.mp3'
+                },
+                {
+                    id: 'audio18',
+                    title: 'Contigo Siempre',
+                    author: 'Unknown',
+                    cover: 'fonk2/Contigo Siempre.png',
+                    audioSrc: 'fonk1/Contigo Siempre.mp3'
+                },
+                {
+                    id: 'audio19',
+                    title: 'DIREITOS AUTORAIS',
+                    author: 'Unknown',
+                    cover: 'fonk2/DIREITOS AUTORAIS.png',
+                    audioSrc: 'fonk1/DIREITOS AUTORAIS.mp3'
+                },
+                {
+                    id: 'audio20',
+                    title: 'DJ Rob - Boys Interface [SUPER SLOWED]',
+                    author: 'Unknown',
+                    cover: 'fonk2/DJ Rob - Boys Interface [SUPER SLOWED].png',
+                    audioSrc: 'fonk1/DJ Rob - Boys Interface [SUPER SLOWED].mp3'
+                },
+                {
+                    id: 'audio21',
+                    title: 'DJ Samir - TAKEN (Brazilian Funk) Tiktok',
+                    author: 'Unknown',
+                    cover: 'fonk2/DJ Samir - TAKEN (Brazilian Funk) Tiktok.png',
+                    audioSrc: 'fonk1/DJ Samir - TAKEN (Brazilian Funk) Tiktok.mp3'
+                },
+                {
+                    id: 'audio22',
+                    title: 'DUTCH DISORDER - HEROINE (PAT B REMIX) [TOZA EDIT]',
+                    author: 'Unknown',
+                    cover: 'fonk2/DUTCH DISORDER - HEROINE (PAT B REMIX) [TOZA EDIT].png',
+                    audioSrc: 'fonk1/DUTCH DISORDER - HEROINE (PAT B REMIX) [TOZA EDIT].mp3'
+                },
+                {
+                    id: 'audio23',
+                    title: 'ECOS DO ABISMO',
+                    author: 'Unknown',
+                    cover: 'fonk2/ECOS DO ABISMO.png',
+                    audioSrc: 'fonk1/ECOS DO ABISMO.mp3'
+                },
+                {
+                    id: 'audio24',
+                    title: 'EL BEIBI',
+                    author: 'Unknown',
+                    cover: 'fonk2/EL BEIBI.png',
+                    audioSrc: 'fonk1/EL BEIBI.mp3'
+                },
+                {
+                    id: 'audio25',
+                    title: 'ELOY (Ultra Slowed)',
+                    author: 'Unknown',
+                    cover: 'fonk2/ELOY (Ultra Slowed).png',
+                    audioSrc: 'fonk1/ELOY (Ultra Slowed).mp3'
+                },
+                {
+                    id: 'audio26',
+                    title: 'FOLLOW FUNK',
+                    author: 'Unknown',
+                    cover: 'fonk2/FOLLOW FUNK.png',
+                    audioSrc: 'fonk1/FOLLOW FUNK.mp3'
+                },
+                {
+                    id: 'audio27',
+                    title: 'Funk Da Sedução',
+                    author: 'Unknown',
+                    cover: 'fonk2/Funk Da Sedução.png',
+                    audioSrc: 'fonk1/Funk Da Sedução.mp3'
+                },
+                {
+                    id: 'audio28',
+                    title: 'Funk Do Radar',
+                    author: 'Unknown',
+                    cover: 'fonk2/Funk Do Radar.png',
+                    audioSrc: 'fonk1/Funk Do Radar.mp3'
+                },
+                {
+                    id: 'audio29',
+                    title: 'GRANDE IMPÉRIO',
+                    author: 'Unknown',
+                    cover: 'fonk2/GRANDE IMPÉRIO.png',
+                    audioSrc: 'fonk1/GRANDE IMPÉRIO.mp3'
+                },
+                {
+                    id: 'audio30',
+                    title: 'llokwalkiki & trrxt - GLOW',
+                    author: 'Unknown',
+                    cover: 'fonk2/llokwalkiki & trrxt - GLOW.png',
+                    audioSrc: 'fonk1/llokwalkiki & trrxt - GLOW.mp3'
+                },
+                {
+                    id: 'audio31',
+                    title: 'LXNGVX - NITRO [Brazilian Phonk]',
+                    author: 'Unknown',
+                    cover: 'fonk2/LXNGVX - NITRO [Brazilian Phonk].png',
+                    audioSrc: 'fonk1/LXNGVX - NITRO [Brazilian Phonk].mp3'
+                },
+                {
+                    id: 'audio32',
+                    title: 'MC LIVINHO e DJ GUUGA - VIDRADO EM VOÇE (COM GRAVE) (BASS-BOOSTED)',
+                    author: 'Unknown',
+                    cover: 'fonk2/MC LIVINHO e DJ GUUGA - VIDRADO EM VOÇE (COM GRAVE) (BASS-BOOSTED).png',
+                    audioSrc: 'fonk1/MC LIVINHO e DJ GUUGA - VIDRADO EM VOÇE (COM GRAVE) (BASS-BOOSTED).mp3'
+                },
+                {
+                    id: 'audio33',
+                    title: 'MONTAGE PARTY',
+                    author: 'Unknown',
+                    cover: 'fonk2/MONTAGE PARTY.png',
+                    audioSrc: 'fonk1/MONTAGE PARTY.mp3'
+                },
+                {
+                    id: 'audio34',
+                    title: 'MONTAGEM BATCHI',
+                    author: 'Unknown',
+                    cover: 'fonk2/MONTAGEM BATCHI.png',
+                    audioSrc: 'fonk1/MONTAGEM BATCHI.mp3'
+                },
+                {
+                    id: 'audio35',
+                    title: 'montagem hyperexplosiva (Sped Up)',
+                    author: 'Unknown',
+                    cover: 'fonk2/montagem hyperexplosiva (Sped Up).png',
+                    audioSrc: 'fonk1/montagem hyperexplosiva (Sped Up).mp3'
+                },
+                {
+                    id: 'audio36',
+                    title: 'MONTAGEM MARE GRANA (Hardstyle Remix)',
+                    author: 'Unknown',
+                    cover: 'fonk2/MONTAGEM MARE GRANA (Hardstyle Remix).png',
+                    audioSrc: 'fonk1/MONTAGEM MARE GRANA (Hardstyle Remix).mp3'
+                },
+                {
+                    id: 'audio37',
+                    title: 'MONTAGEM SOPRA',
+                    author: 'Unknown',
+                    cover: 'fonk2/MONTAGEM SOPRA.png',
+                    audioSrc: 'fonk1/MONTAGEM SOPRA.mp3'
+                },
+                {
+                    id: 'audio38',
+                    title: 'MONTAGEM VOZES PROFUNDAS (TikTok Version)',
+                    author: 'Unknown',
+                    cover: 'fonk2/MONTAGEM VOZES PROFUNDAS (TikTok Version).png',
+                    audioSrc: 'fonk1/MONTAGEM VOZES PROFUNDAS (TikTok Version).mp3'
+                },
+                {
+                    id: 'audio39',
+                    title: 'MXZI - MONTAGEM TOMADA [EXTENDED]',
+                    author: 'Unknown',
+                    cover: 'fonk2/MXZI - MONTAGEM TOMADA [EXTENDED].png',
+                    audioSrc: 'fonk1/MXZI - MONTAGEM TOMADA [EXTENDED].mp3'
+                },
+                {
+                    id: 'audio40',
+                    title: 'NADA DE NADA  - KVRXD, MAXPVNK, DJ RITMO DIVINO (Extended)',
+                    author: 'Unknown',
+                    cover: 'fonk2/NADA DE NADA  - KVRXD, MAXPVNK, DJ RITMO DIVINO (Extended).png',
+                    audioSrc: 'fonk1/NADA DE NADA  - KVRXD, MAXPVNK, DJ RITMO DIVINO (Extended).mp3'
+                },
+                {
+                    id: 'audio41',
+                    title: 'Nateki & Scythermane - FUNK DE BELEZA 2',
+                    author: 'Unknown',
+                    cover: 'fonk2/Nateki & Scythermane - FUNK DE BELEZA 2.png',
+                    audioSrc: 'fonk1/Nateki & Scythermane - FUNK DE BELEZA 2.mp3'
+                },
+                {
+                    id: 'audio42',
+                    title: 'NUEKI, TOLCHONOV - JUSTICE!',
+                    author: 'Unknown',
+                    cover: 'fonk2/NUEKI, TOLCHONOV - JUSTICE!.png',
+                    audioSrc: 'fonk1/NUEKI, TOLCHONOV - JUSTICE!.mp3'
+                },
+                {
+                    id: 'audio43',
+                    title: 'NUEKI, TOLCHONOV - LIBRE',
+                    author: 'Unknown',
+                    cover: 'fonk2/NUEKI, TOLCHONOV - LIBRE.png',
+                    audioSrc: 'fonk1/NUEKI, TOLCHONOV - LIBRE.mp3'
+                },
+                {
+                    id: 'audio44',
+                    title: 'REAL MOONSHINE FUNK 2 - DJ ROBE, TRXSHBXY',
+                    author: 'Unknown',
+                    cover: 'fonk2/REAL MOONSHINE FUNK 2 - DJ ROBE, TRXSHBXY.png',
+                    audioSrc: 'fonk1/REAL MOONSHINE FUNK 2 - DJ ROBE, TRXSHBXY.mp3'
+                },
+                {
+                    id: 'audio45',
+                    title: 'REAL MOONSHINE FUNK 3',
+                    author: 'Unknown',
+                    cover: 'fonk2/REAL MOONSHINE FUNK 3.png',
+                    audioSrc: 'fonk1/REAL MOONSHINE FUNK 3.mp3'
+                },
+                {
+                    id: 'audio46',
+                    title: 'SAPFIR - BOUNCE FUNK',
+                    author: 'Unknown',
+                    cover: 'fonk2/SAPFIR - BOUNCE FUNK.png',
+                    audioSrc: 'fonk1/SAPFIR - BOUNCE FUNK.mp3'
+                },
+                {
+                    id: 'audio47',
+                    title: 'Seek REI DO BRASIL',
+                    author: 'Unknown',
+                    cover: 'fonk2/Seek REI DO BRASIL.png',
+                    audioSrc: 'fonk1/Seek REI DO BRASIL.mp3'
+                },
+                {
+                    id: 'audio48',
+                    title: 'SETAM',
+                    author: 'Unknown',
+                    cover: 'fonk2/SETAM.png',
+                    audioSrc: 'fonk1/SETAM.mp3'
+                },
+                {
+                    id: 'audio49',
+                    title: 'SLIDE SEQUÊNCIA ULTRAMORTAL (DJ RICK 013 - FREST - DJ TWOZ, MC lyc4n )',
+                    author: 'Unknown',
+                    cover: 'fonk2/SLIDE SEQUÊNCIA ULTRAMORTAL (DJ RICK 013 - FREST - DJ TWOZ, MC lyc4n ).png',
+                    audioSrc: 'fonk1/SLIDE SEQUÊNCIA ULTRAMORTAL (DJ RICK 013 - FREST - DJ TWOZ, MC lyc4n ).mp3'
+                },
+                {
+                    id: 'audio50',
+                    title: 'TOPA TOPA TOPA',
+                    author: 'Unknown',
+                    cover: 'fonk2/TOPA TOPA TOPA.png',
+                    audioSrc: 'fonk1/TOPA TOPA TOPA.mp3'
+                },
+                {
+                    id: 'audio51',
+                    title: 'z-alpha 2 (feat. Mc Roba Cena)',
+                    author: 'Unknown',
+                    cover: 'fonk2/z-alpha 2 (feat. Mc Roba Cena).png',
+                    audioSrc: 'fonk1/z-alpha 2 (feat. Mc Roba Cena).mp3'
+                },
+                {
+                    id: 'audio52',
+                    title: 'z-beta 2',
+                    author: 'Unknown',
+                    cover: 'fonk2/z-beta 2.png',
+                    audioSrc: 'fonk1/z-beta 2.mp3'
+                },
+                {
+                    id: 'audio53',
+                    title: '𝐌𝐆𝐃 & 𝐊𝐡𝐚𝐧𝐠𝐌𝐱𝐍𝐄 - 2 𝐏𝐇𝐔𝐓 𝐇𝐎𝐍 𝐅𝐔𝐍𝐊 (𝐒𝐥𝐨𝐰𝐞𝐝 0.7𝐗 + 𝐑𝐞𝐯𝐞𝐫𝐛)',
+                    author: 'Unknown',
+                    cover: 'fonk2/𝐌𝐆𝐃 & 𝐊𝐡𝐚𝐧𝐠𝐌𝐱𝐍𝐄 - 2 𝐏𝐇𝐔𝐓 𝐇𝐎𝐍 𝐅𝐔𝐍𝐊 (𝐒𝐥𝐨𝐰𝐞𝐝 0.7𝐗 + 𝐑𝐞𝐯𝐞𝐫𝐛).png',
+                    audioSrc: 'fonk1/𝐌𝐆𝐃 & 𝐊𝐡𝐚𝐧𝐠𝐌𝐱𝐍𝐄 - 2 𝐏𝐇𝐔𝐓 𝐇𝐎𝐍 𝐅𝐔𝐍𝐊 (𝐒𝐥𝐨𝐰𝐞𝐝 0.7𝐗 + 𝐑𝐞𝐯𝐞𝐫𝐛).mp3'
+                },
+                {
+                    id: 'audio54',
+                    title: '𝙀𝙎𝙎𝙀 𝘾𝘼𝙍𝘼! (𝙎𝙇𝙊𝙒𝙀𝘿)',
+                    author: 'Unknown',
+                    cover: 'fonk2/𝙀𝙎𝙎𝙀 𝘾𝘼𝙍𝘼! (𝙎𝙇𝙊𝙒𝙀𝘿).png',
+                    audioSrc: 'fonk1/𝙀𝙎𝙎𝙀 𝘾𝘼𝙍𝘼! (𝙎𝙇𝙊𝙒𝙀𝘿).mp3'
+                },
+
+            ];
+
+            // Перемешиваем треки и отображаем их
+            shuffleArray(tracks);
+            renderShuffledCards();
+
+            // Функция для переключения аудио
+            function toggleAudio(audioId, card) {
+                const audio = audioElements[audioId];
+                const trackIndex = tracks.findIndex(track => track.id === audioId);
+
+                if (currentAudio && currentAudio !== audio) {
+                    currentAudio.pause();
+                    document.querySelector(`.fonk-card[data-audio-id="${currentAudio.id}"]`)?.classList.remove('active');
+                }
+
+                if (audio.paused) {
+                    audio.play();
+                    currentAudio = audio;
+                    currentTrackIndex = trackIndex;
+                    isPlaying = true;
+                    card.classList.add('active');
+                    mainPlayButton.textContent = '⏸';
+
+                    // Обновляем обложку в основном плеере
+                    const cover = card.querySelector('.cover-art img').src;
+                    document.querySelector('.player-artwork img').src = cover;
+
+                    // Обновляем название трека
+                    const title = card.querySelector('.title-glitch').textContent;
+                    document.querySelector('.player-artwork img').alt = title;
+                } else {
+                    audio.pause();
+                    isPlaying = false;
+                    card.classList.remove('active');
+                    mainPlayButton.textContent = '▶';
+                }
+
+                // Обновляем прогресс воспроизведения
+                audio.addEventListener('timeupdate', function() {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    document.querySelector('.progress-fill').style.width = `${progress}%`;
+                });
+
+                // Обработчик окончания трека
+                audio.addEventListener('ended', function() {
+                    if (isAutoPlayEnabled) {
+                        playNextTrack();
+                    } else {
+                        isPlaying = false;
+                        mainPlayButton.textContent = '▶';
+                        document.querySelector(`.fonk-card[data-audio-id="${audio.id}"]`)?.classList.remove('active');
+                    }
+                });
+            }
+
+            // Функция для воспроизведения трека по индексу
+            function playTrackByIndex(index) {
+                if (index >= 0 && index < tracks.length) {
+                    const track = tracks[index];
+                    const audio = audioElements[track.id];
+                    const card = document.querySelector(`.fonk-card[data-audio-id="${track.id}"]`);
+
+                    // Останавливаем текущий трек, если он есть
+                    if (currentAudio && currentAudio !== audio) {
+                        currentAudio.pause();
+                        document.querySelector(`.fonk-card[data-audio-id="${currentAudio.id}"]`)?.classList.remove('active');
+                    }
+
+                    // Воспроизводим новый трек
+                    audio.currentTime = 0;
+                    audio.play();
+                    currentAudio = audio;
+                    currentTrackIndex = index;
+                    isPlaying = true;
+                    if (card) card.classList.add('active');
+                    mainPlayButton.textContent = '⏸';
+
+                    // Обновляем обложку в основном плеере
+                    const cover = card.querySelector('.cover-art img').src;
+                    document.querySelector('.player-artwork img').src = cover;
+
+                    // Обновляем название трека
+                    const title = card.querySelector('.title-glitch').textContent;
+                    document.querySelector('.player-artwork img').alt = title;
+
+                    // Обновляем прогресс воспроизведения
+                    audio.addEventListener('timeupdate', function() {
+                        const progress = (audio.currentTime / audio.duration) * 100;
+                        document.querySelector('.progress-fill').style.width = `${progress}%`;
+                    });
+
+                    // Обработчик окончания трека
+                    audio.addEventListener('ended', function() {
+                        if (isAutoPlayEnabled) {
+                            playNextTrack();
+                        } else {
+                            isPlaying = false;
+                            mainPlayButton.textContent = '▶';
+                            document.querySelector(`.fonk-card[data-audio-id="${audio.id}"]`)?.classList.remove('active');
+                        }
+                    });
+                }
+            }
+
+            // Функция для воспроизведения следующего трека
+            function playNextTrack() {
+                let nextIndex = currentTrackIndex + 1;
+                if (nextIndex >= tracks.length) {
+                    nextIndex = 0;
+                }
+                playTrackByIndex(nextIndex);
+            }
+
+            // Функция для воспроизведения предыдущего трека
+            function playPreviousTrack() {
+                let prevIndex = currentTrackIndex - 1;
+                if (prevIndex < 0) {
+                    prevIndex = tracks.length - 1;
+                }
+                playTrackByIndex(prevIndex);
+            }
+
+            // Обработчик клика по кнопке "brazil"
+            brazilButton.addEventListener('click', function() {
+                isAutoPlayEnabled = true;
+                currentTrackIndex = 0;
+                playTrackByIndex(currentTrackIndex);
+            });
+
+            // Обработчик клика по основной кнопке воспроизведения
+            mainPlayButton.addEventListener('click', function() {
+                if (currentAudio) {
+                    if (isPlaying) {
+                        currentAudio.pause();
+                        mainPlayButton.textContent = '▶';
+                        document.querySelector(`.fonk-card[data-audio-id="${currentAudio.id}"]`)?.classList.remove('active');
+                    } else {
+                        currentAudio.play();
+                        mainPlayButton.textContent = '⏸';
+                        document.querySelector(`.fonk-card[data-audio-id="${currentAudio.id}"]`)?.classList.add('active');
+                    }
+                    isPlaying = !isPlaying;
+                } else if (tracks.length > 0) {
+                    isAutoPlayEnabled = true;
+                    currentTrackIndex = 0;
+                    playTrackByIndex(currentTrackIndex);
+                }
+            });
+
+            // Обработчик кнопки "предыдущий трек"
+            prevButton.addEventListener('click', function() {
+                playPreviousTrack();
+            });
+
+            // Обработчик кнопки "следующий трек"
+            nextButton.addEventListener('click', function() {
+                playNextTrack();
+            });
+
+            // Обработчик клика по прогресс-бару
+            document.querySelector('.progress-bar').addEventListener('click', function(e) {
+                if (currentAudio) {
+                    const percent = e.offsetX / this.offsetWidth;
+                    currentAudio.currentTime = percent * currentAudio.duration;
+                }
+            });
+
+            // Обработчик изменения громкости
+            volumeSlider.addEventListener('input', function() {
+                if (currentAudio) {
+                    currentAudio.volume = this.value;
+                }
+
+                // Обновляем иконку громкости
+                const volumeIcon = document.querySelector('.volume-icon');
+                if (this.value == 0) {
+                    volumeIcon.textContent = '🔇';
+                } else if (this.value < 0.5) {
+                    volumeIcon.textContent = '🔈';
+                } else {
+                    volumeIcon.textContent = '🔊';
+                }
+            });
+
+            // Анимации
+            let progress = 0;
+            const progressFill = document.querySelector('.progress-fill');
+
+            function updateProgress() {
+                progress += 0.2;
+                if (progress > 100) progress = 0;
+                if (!isPlaying) {
+                    progressFill.style.width = currentAudio ?
+                        `${(currentAudio.currentTime / currentAudio.duration) * 100}%` : '0%';
+                }
+                requestAnimationFrame(updateProgress);
+            }
+
+            updateProgress();
+
+            const albumArt = document.querySelector('.rotate-album');
+            let rotation = 0;
+
+            function rotateAlbum() {
+                if (isPlaying) {
+                    rotation += 0.2;
+                    albumArt.style.transform = `rotate(${rotation}deg)`;
+                }
+                requestAnimationFrame(rotateAlbum);
+            }
+
+            rotateAlbum();
+        });
+    </script>
+</body>
+</html>
